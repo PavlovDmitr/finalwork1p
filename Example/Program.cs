@@ -1,4 +1,5 @@
-﻿using System.Xml;
+﻿using System;
+using System.Xml;
 namespace Example
 {
     class Program
@@ -45,7 +46,9 @@ namespace Example
             {
                 foreach (string line in System.IO.File.ReadLines(path))
                 {
-                    result1[counter] = line;
+                    Array.Resize(ref result1, result1.Length+1);
+                    result1[result1.Length-1] = line;
+                    Console.WriteLine(line);
                     counter++;
                 }
             }
@@ -58,13 +61,11 @@ namespace Example
                 Console.WriteLine("Directory not found");
             }
             
-            do
-            {
+            
             counter = new Random().Next(0, counter);
             result2 = result1[counter].Split(" ");
-            if (result2.Length < 2) result2 = result1; break;
-            }
-            while (true);
+            if (result2.Length < 2) result2 = result1;
+            PrintArray(result2);           
             return result2;
         }
 
@@ -78,22 +79,44 @@ namespace Example
             if (rnd == 2) result = result2;
             return result;
         }
+
+        static void PrintArray(string[] strArr)
+        {
+            foreach(string str in strArr) Console.Write($"{str} ");
+            Console.WriteLine();
+        }
         static void Main()
         {   
-            string path = "../inputUserData.txt";
+            string[] result = new string[]{};
+            string path = "../Example/inputUserData.txt";
             char[] delimiterChar = { ' ', '.', '(', ')', '[', ']', '/', '!', '?', ';', ':' };
             Console.WriteLine(ReadNodeText(1,"welcomtext"));
             string[] userDataInsert= Console.ReadLine().Trim().Split(delimiterChar);
             int count = 0;
             string[] userData = new string[]{};
-            if(userDataInsert.Length == 0) userData = ReadUserDataFromFile(path);
+            Console.WriteLine(userDataInsert.Length);
+            if(userDataInsert.Length == 1 && userDataInsert[0] == "") userData = ReadUserDataFromFile(path);
             foreach( string str in userDataInsert)
             {
+                try
+                {
                 if (str.ToLower()[^-4..^-0] == ".txt") {userData = ReadUserDataFromFile(str); break;}
-                count++;
+                }
+                catch{count++;}
             }
             if (userData.Length == 0) userData = SetUserDataDefault();
-            foreach 
+            foreach (string str in userData)
+            {
+                if (str.Length<4) 
+                {
+                    Array.Resize(ref result, result.Length+1);
+                    result[result.Length-1] = str;
+                }
+            }
+            Console.WriteLine();
+            PrintArray(result);
+
+            
 
         }
     }
