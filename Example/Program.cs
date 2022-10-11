@@ -19,7 +19,7 @@ namespace Example
                 }
                 else return "1  file not found";
             }
-            catch 
+            catch
             {
                 try
                 {
@@ -35,8 +35,8 @@ namespace Example
                 }
                 catch { return "3  file not found"; }
             }
-            
         }
+
         static string[] ReadUserDataFromFile(string path)
         {
             string[] result1 = new string[] { };
@@ -46,8 +46,8 @@ namespace Example
             {
                 foreach (string line in System.IO.File.ReadLines(path))
                 {
-                    Array.Resize(ref result1, result1.Length+1);
-                    result1[result1.Length-1] = line;
+                    Array.Resize(ref result1, result1.Length + 1);
+                    result1[result1.Length - 1] = line;
                     Console.WriteLine(line);
                     counter++;
                 }
@@ -60,12 +60,10 @@ namespace Example
             {
                 Console.WriteLine("Directory not found");
             }
-            
-            
             counter = new Random().Next(0, counter);
             result2 = result1[counter].Split(" ");
             if (result2.Length < 2) result2 = result1;
-            PrintArray(result2);           
+            PrintArray(result2);
             return result2;
         }
 
@@ -86,38 +84,45 @@ namespace Example
             Console.WriteLine();
         }
         static void Main()
-        {   
-            string[] result = new string[]{};
+        {
+            Console.Clear();
+            string[] result = new string[] { };
             string path = "../Example/inputUserData.txt";
-            char[] delimiterChar = { ' ', '.', '(', ')', '[', ']', '/', '!', '?', ';', ':' };
-            Console.WriteLine(ReadNodeText(1,"welcomtext"));
-            string[] userDataInsert= Console.ReadLine().Trim().Split(delimiterChar);
-            int count = 0;
-            string[] userData = new string[]{};
+            char[] delimiterChar = { ' ', '(', ')', '[', ']', '/', '!', '?', ';'};
+            Console.WriteLine(ReadNodeText(1, "welcomtext"));
+            string[] userDataInsert = Console.ReadLine().Trim().Split(delimiterChar);
+            string[] userData = new string[] { };
             Console.WriteLine(userDataInsert.Length);
-            if(userDataInsert.Length == 1 && userDataInsert[0] == "") userData = ReadUserDataFromFile(path);
-            foreach( string str in userDataInsert)
+            if (userDataInsert.Length == 1 && userDataInsert[0].Length == 0)
             {
-                try
-                {
-                if (str.ToLower()[^-4..^-0] == ".txt") {userData = ReadUserDataFromFile(str); break;}
-                }
-                catch{count++;}
+                try { userData = ReadUserDataFromFile(path); }
+                catch { Console.WriteLine("file not found, use default array"); userData = SetUserDataDefault(); }
+                if (userData.Length == 0) { Console.WriteLine("file empty, use default array"); userData = SetUserDataDefault(); }
             }
-            if (userData.Length == 0) userData = SetUserDataDefault();
+            else if (userDataInsert.Length == 1 && userDataInsert[0].Length > 4)
+            {
+                if (userDataInsert[0].ToLower()[^4..^0] == ".txt")
+                {
+                    try
+                    {
+                        { userData = ReadUserDataFromFile(userDataInsert[0]);}
+                    }
+                    catch { Console.WriteLine($"{userDataInsert[0]} file not found, use default array"); userData = SetUserDataDefault(); }
+                    if (userData.Length == 0) { Console.WriteLine($"{userDataInsert[0]} file empty, use default array"); userData = SetUserDataDefault(); }
+                }
+                else {Console.WriteLine($"{userDataInsert[0]} this no file path? use as array"); userData = userDataInsert;}
+            }
+            else if (userDataInsert.Length > 1 && userDataInsert[0] != "") userData = userDataInsert;
             foreach (string str in userData)
             {
-                if (str.Length<4) 
+                if (str.Length < 4)
                 {
-                    Array.Resize(ref result, result.Length+1);
-                    result[result.Length-1] = str;
+                    Array.Resize(ref result, result.Length + 1);
+                    result[result.Length - 1] = str;
                 }
             }
             Console.WriteLine();
             PrintArray(result);
-
-            
-
         }
     }
 }
