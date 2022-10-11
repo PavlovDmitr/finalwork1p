@@ -80,19 +80,28 @@ namespace Example
 
         static void PrintArray(string[] strArr)
         {
-            foreach(string str in strArr) Console.Write($"{str} ");
-            Console.WriteLine();
+            foreach (string str in strArr) Console.Write($"{str} ");
+        }
+
+        static void WriteFile(string[] text)
+        {
+            StreamWriter str = new StreamWriter("outputData.txt");
+            for (int i = 0; i < text.Length; i++)
+            {
+                str.Write($"{text[i]} ");
+            }
+            str.Close();
         }
         static void Main()
         {
             Console.Clear();
             string[] result = new string[] { };
             string path = "../Example/inputUserData.txt";
-            char[] delimiterChar = { ' ', '(', ')', '[', ']', '/', '!', '?', ';'};
+            char[] delimiterChar = { ' ', '(', ')', '[', ']', '/', '!', '?', ';' };
+            Console.WriteLine(ReadNodeText(1, "text"));
             Console.WriteLine(ReadNodeText(1, "welcomtext"));
             string[] userDataInsert = Console.ReadLine().Trim().Split(delimiterChar);
             string[] userData = new string[] { };
-            Console.WriteLine(userDataInsert.Length);
             if (userDataInsert.Length == 1 && userDataInsert[0].Length == 0)
             {
                 try { userData = ReadUserDataFromFile(path); }
@@ -105,14 +114,14 @@ namespace Example
                 {
                     try
                     {
-                        { userData = ReadUserDataFromFile(userDataInsert[0]);}
+                        { userData = ReadUserDataFromFile(userDataInsert[0]); }
                     }
                     catch { Console.WriteLine($"{userDataInsert[0]} file not found, use default array"); userData = SetUserDataDefault(); }
                     if (userData.Length == 0) { Console.WriteLine($"{userDataInsert[0]} file empty, use default array"); userData = SetUserDataDefault(); }
                 }
-                else {Console.WriteLine($"{userDataInsert[0]} this no file path? use as array"); userData = userDataInsert;}
+                else { Console.WriteLine($"{userDataInsert[0]} this no file path? use as array"); userData = userDataInsert; }
             }
-            else if (userDataInsert.Length > 1 && userDataInsert[0] != "") userData = userDataInsert;
+            else if (userDataInsert.Length >= 1 && userDataInsert[0] != "") userData = userDataInsert;
             foreach (string str in userData)
             {
                 if (str.Length < 4)
@@ -121,8 +130,14 @@ namespace Example
                     result[result.Length - 1] = str;
                 }
             }
-            Console.WriteLine();
+            Console.WriteLine("Результат работы программы массив из следующих элементов:");
             PrintArray(result);
+            Console.WriteLine("\nЖелаете сохранить результат работы программы в файл? введите yes/YES для согласия, или Enter для отказа");
+            string? key = Console.ReadLine();
+            if (key.ToLower() == "yes")
+            {
+                WriteFile(result);
+            }
         }
     }
 }
